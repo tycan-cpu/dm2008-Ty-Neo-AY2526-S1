@@ -9,11 +9,12 @@
 /* ----------------- Globals ----------------- */
 let leftPaddle, rightPaddle, ball;
 
+//score counts LOSSES instead of wins
 let leftScore = 0;
 let rightScore = 0;
 
-let gameStart = false;
-let singleStart = false;
+let gameStart = false; //for 2 player
+let singleStart = false; //for 1 player
 
 let mouseControls; //for 2 player
 let singleControls; //for 1 player
@@ -53,6 +54,7 @@ function draw() {
 
   titleScreen();
 
+  //game start
   if (gameStart || singleStart) {
     // 1) read input (students: add paddle movement here)
     handleInput();
@@ -72,9 +74,11 @@ function draw() {
 /* ----------------- GAME START ----------------- */
 
 function mousePressed() {
+  //to let it load so i dont always start 1 player mode
   if (!firstClick) {
     firstClick = true;
-  } else {
+  } else if (!gameStart) {
+    //1 player mode start
     singleStart = true;
     singleControls = true;
   }
@@ -82,6 +86,7 @@ function mousePressed() {
 
 function keyPressed() {
   if (key == "l" || key == "L") {
+    //restart state - reset everything if players give up
     gameStart = false;
     singleStart = false;
     ball.reset();
@@ -89,7 +94,10 @@ function keyPressed() {
     rightPaddle.reset();
     leftScore = 0;
     rightScore = 0;
+  } else if (key == "4") {
+    saveCanvas("miniproject-image", "jpg");
   } else {
+    //2 player mode start with any key press (but for users they press w/s lol)
     gameStart = true;
     mouseControls = true;
   }
@@ -125,6 +133,7 @@ function handleInput() {
         leftPaddle.vy = 10;
       }
 
+      // if left player loses 10 times, they gain free movement
       if (leftScore >= 10) {
         if (key === "a") {
           //leftPaddle.vy -= leftPaddle.speed;
@@ -141,12 +150,14 @@ function handleInput() {
     if ((mouseControls = true)) {
       rightPaddle.pos.y = mouseY;
 
+      //if right player loses 10 times, they gain free movement
       if (rightScore >= 10) {
         rightPaddle.pos.x = mouseX;
       }
     }
   }
 
+  //for 1 player game mouse movement dictates both paddles positions
   if (singleStart) {
     rightPaddle.pos.y = mouseY;
     leftPaddle.pos.y = mouseY;
@@ -159,7 +170,7 @@ function keyReleased() {
   leftPaddle.vy = 0;
   rightPaddle.vy = 0;
 
-  leftPaddle.vx = 0; //for bastard
+  leftPaddle.vx = 0; //for free movement section
 }
 
 /* ----------------- CLASS: PADDLE ----------------- */
@@ -169,7 +180,7 @@ class Paddle {
     this.startPos = createVector(x, y);
     this.w = w;
     this.h = h;
-    this.vx = 0; //for bastard section...
+    this.vx = 0; //for free movement section...
     this.vy = 0; // students will change this via input
     //this.speed = 1;
     this.asset = asset;
