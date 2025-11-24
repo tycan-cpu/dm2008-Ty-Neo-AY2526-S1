@@ -1,0 +1,19 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  display: block;
+}
+
+.c-btn {
+  font-family: Courier New;
+  border: 2px dashed blue;
+  cursor: pointer;
+  transition: all 300ms;
+}
+
+.c-btn:hover {
+  background: white;
+  border: 4px solid darkblue;
+}
